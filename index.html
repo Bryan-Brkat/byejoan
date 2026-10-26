@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farewell, Joan</title>
+<meta name="description" content="A small farewell letter for Joan, with a few questions on the way.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gloock&family=La+Belle+Aurore&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&display=swap" rel="stylesheet">
+<style>
+/* ── Tokens ───────────────────────────────────────────────────────────── */
+:root {
+  --linen:    #E6DFCF;
+  --paper:    #FBF8F2;
+  --paper-2:  #F3EDE1;
+  --ink:      #1E2B4A;
+  --ink-soft: #5A6378;
+  --rule:     #D6CCB8;
+  --air-red:  #B83A2E;
+  --air-blue: #27458C;
+  --wax:      #7B1E2E;
+  --wax-hi:   #A23345;
+  --ok:       #2F6B4F;
+
+  --display: 'Gloock', 'Times New Roman', serif;
+  --body:    'Newsreader', Georgia, serif;
+  --hand:    'La Belle Aurore', cursive;
+
+  --airmail: repeating-linear-gradient(135deg,
+    var(--air-red) 0 12px, var(--paper) 12px 18px,
+    var(--air-blue) 18px 30px, var(--paper) 30px 36px);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--body);
+  color: var(--ink);
+  background-color: var(--linen);
+  background-image:
+    radial-gradient(rgba(30,43,74,.05) 1px, transparent 1px),
+    radial-gradient(rgba(30,43,74,.035) 1px, transparent 1px);
+  background-size: 22px 22px, 13px 13px;
+  background-position: 0 0, 6px 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 16px 40px;
+  overflow-x: hidden;
+}
+
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--air-blue); outline-offset: 3px; border-radius: 4px; }
+
+/* ── Route (progress) ─────────────────────────────────────────────────── */
+.route {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 440px;
+  margin: 4px 0 28px;
+  padding: 0;
+  list-style: none;
+}
+.route li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: .8rem;
+  color: var(--ink-soft);
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.route li .dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-soft);
+  background: var(--linen);
+  transition: background .4s, border-color .4s, transform .4s;
+}
+.route li.done .dot   { background: var(--ink); border-color: var(--ink); }
+.route li.active .dot { background: var(--air-red); border-color: var(--air-red); transform: scale(1.25); }
+.route li.active      { color: var(--ink); font-weight: 600; }
+.route .leg {
+  flex: 1 1 auto;
+  height: 0;
+  border-top: 1.5px dashed var(--ink-soft);
+  opacity: .5;
+  margin: 0 -14px 22px;
+}
+
+/* ── Stages ───────────────────────────────────────────────────────────── */
+.stage { display: none; width: 100%; max-width: 440px; flex-direction: column; align-items: center; }
+.stage.active { display: flex; animation: arrive .6s cubic-bezier(.22,1,.36,1); }
+@keyframes arrive { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+/* ── Stamp & postmark (shared) ────────────────────────────────────────── */
+.stamp {
+  --stamp-ink: var(--air-blue);
+  width: 62px; height: 74px;
+  padding: 5px;
+  flex: none;
+  background: radial-gradient(circle, transparent 2.6px, var(--paper) 3px) -5px -5px / 10px 10px;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.12));
+  transform: rotate(3deg);
+}
+.stamp-face {
+  width: 100%; height: 100%;
+  background: var(--stamp-ink);
+  color: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border: 2px solid var(--paper);
+  outline: 1px solid var(--stamp-ink);
+}
+.stamp-face b { font-family: var(--display); font-weight: 400; font-size: 1.7rem; line-height: 1; }
+.stamp-face small { font-size: .55rem; letter-spacing: .04em; margin-top: 3px; opacity: .85; }
+
+/* ── Stage 1: postcard deck ───────────────────────────────────────────── */
+.deck {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  margin-bottom: 30px;
+  perspective: 1200px;
+}
+.postcard {
+  position: absolute;
+  inset: 0;
+  padding: 9px;
+  background: var(--airmail);
+  border-radius: 6px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 18px 40px -18px rgba(30,43,74,.45);
+  transition: transform .65s cubic-bezier(.22,1,.36,1), opacity .5s ease;
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+.postcard[data-pos="0"] { z-index: 4; transform: none; }
+.postcard[data-pos="1"] { z-index: 3; transform: translateY(12px) scale(.955) rotate(-2deg); }
+.postcard[data-pos="2"] { z-index: 2; transform: translateY(22px) scale(.91) rotate(2.2deg); }
+.postcard[data-pos="3"] { z-index: 1; transform: translateY(30px) scale(.87) rotate(-1deg); opacity: .0; }
+.postcard.gone {
+  z-index: 5;
+  transform: translate(-115%, -30px) rotate(-14deg);
+  opacity: 0;
+  pointer-events: none;
+}
+.postcard[data-pos]:not([data-pos="0"]) { pointer-events: none; }
+
+.postcard-inner {
+  height: 100%;
+  background: var(--paper);
+  border-radius: 2px;
+  padding: 26px 24px 20px;
+  display: flex;
+  flex-direction: column;
+}
+.postcard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.salute {
+  font-family: var(--hand);
+  font-size: 1.55rem;
+  color: var(--ink);
+  line-height: 1.2;
+  margin: 8px 0 0;
+}
+.postcard h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 7vw, 2.35rem);
+  line-height: 1.05;
+  letter-spacing: -.01em;
+  margin: 22px 0 12px;
+  text-wrap: balance;
+}
+.postcard p {
+  font-size: 1.08rem;
+  line-height: 1.6;
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 34ch;
+  text-wrap: pretty;
+}
+.postcard-foot {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--rule);
+}
+.count { font-size: .9rem; color: var(--ink-soft); font-style: italic; }
+
+/* ── Buttons ──────────────────────────────────────────────────────────── */
+.btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 12px 22px;
+  border-radius: 999px;
+  transition: background .2s, transform .15s;
+}
+.btn:hover  { background: #2C3D66; }
+.btn:active { transform: scale(.97); }
+.btn[disabled] { opacity: .4; cursor: not-allowed; }
+.btn-wax { background: var(--wax); }
+.btn-wax:hover { background: var(--wax-hi); }
+.btn-wide { width: 100%; padding: 14px 22px; }
+.link-btn {
+  background: none; border: 0; cursor: pointer;
+  color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px;
+  font-size: .95rem; padding: 6px;
+}
+
+/* ── Stage 2: questions ───────────────────────────────────────────────── */
+.sheet {
+  position: relative;
+  width: 100%;
+  background: var(--paper);
+  border-radius: 6px;
+  padding: 26px 24px 24px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 18px 40px -18px rgba(30,43,74,.45);
+  background-image: linear-gradient(var(--paper), var(--paper));
+  overflow: hidden;
+}
+.sheet::before {
+  content: "";
+  position: absolute; left: 0; right: 0; top: 0; height: 6px;
+  background: var(--airmail);
+}
+.q-meta {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: .9rem; color: var(--ink-soft); font-style: italic;
+  margin: 4px 0 18px;
+}
+.ticks { display: flex; gap: 6px; }
+.ticks i {
+  width: 22px; height: 4px; border-radius: 2px; background: var(--rule);
+  transition: background .3s;
+}
+.ticks i.on { background: var(--ink); }
+
+.q-step { display: none; }
+.q-step.active { display: block; animation: arrive .45s cubic-bezier(.22,1,.36,1); }
+.q-step h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(1.6rem, 6vw, 2rem);
+  line-height: 1.12;
+  margin: 0 0 8px;
+  text-wrap: balance;
+}
+.q-help { color: var(--ink-soft); font-size: 1rem; margin: 0 0 18px; line-height: 1.5; }
+
+.field {
+  width: 100%;
+  border: 0;
+  border-bottom: 1.5px solid var(--ink);
+  background: transparent;
+  font-family: var(--body);
+  font-style: italic;
+  font-size: 1.25rem;
+  color: var(--ink);
+  padding: 10px 2px 8px;
+  border-radius: 0;
+  outline: none;
+}
+.field::placeholder { color: #9AA0AE; }
+.field:focus { border-bottom-color: var(--air-blue); box-shadow: 0 1px 0 var(--air-blue); }
+
+.choices { display: grid; gap: 10px; }
+.choice {
+  display: flex; align-items: center; gap: 12px;
+  text-align: left;
+  width: 100%;
+  background: var(--paper-2);
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  padding: 13px 14px;
+  cursor: pointer;
+  font-size: 1.05rem;
+  transition: border-color .2s, background .2s;
+}
+.choice:hover { border-color: var(--rule); }
+.choice .mark {
+  width: 18px; height: 18px; border-radius: 50%; flex: none;
+  border: 1.5px solid var(--ink-soft);
+  display: grid; place-items: center;
+}
+.choice[aria-checked="true"] { border-color: var(--ink); background: var(--paper); }
+.choice[aria-checked="true"] .mark { border-color: var(--ink); }
+.choice[aria-checked="true"] .mark::after {
+  content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ink);
+}
+
+/* scale select */
+.scale-wrap { position: relative; }
+.scale-select {
+  appearance: none; -webkit-appearance: none;
+  width: 100%;
+  font-family: var(--display);
+  font-size: 2.2rem;
+  color: var(--ink);
+  background: var(--paper-2);
+  border: 1.5px solid var(--rule);
+  border-radius: 12px;
+  padding: 14px 52px 14px 18px;
+  cursor: pointer;
+  outline: none;
+}
+.scale-select:focus { border-color: var(--air-blue); }
+.scale-wrap::after {
+  content: "";
+  position: absolute; right: 20px; top: 50%;
+  width: 10px; height: 10px;
+  border-right: 2px solid var(--ink); border-bottom: 2px solid var(--ink);
+  transform: translateY(-70%) rotate(45deg);
+  pointer-events: none;
+}
+.scale-ends {
+  display: flex; justify-content: space-between;
+  font-size: .9rem; color: var(--ink-soft); font-style: italic;
+  margin-top: 8px;
+}
+
+.q-actions { margin-top: 24px; display: flex; justify-content: flex-end; }
+.q-error {
+  min-height: 1.5em;
+  margin: 12px 0 0;
+  color: var(--air-red);
+  font-weight: 600;
+  font-size: 1rem;
+}
+.q-error small { display: block; font-weight: 400; font-style: italic; color: var(--ink-soft); font-size: .92rem; margin-top: 2px; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); } 40% { transform: translateX(7px); }
+  60% { transform: translateX(-4px); } 80% { transform: translateX(3px); }
+}
+.shake { animation: shake .45s ease; }
+
+/* rubber stamp verdict */
+.verdict {
+  position: absolute;
+  right: 18px; top: 46%;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  color: var(--ok);
+  border: 3px solid var(--ok);
+  border-radius: 8px;
+  padding: 6px 14px 4px;
+  transform: rotate(-9deg) scale(2.2);
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(circle at 30% 40%, transparent 0 1px, rgba(251,248,242,.5) 1.5px) 0 0 / 5px 5px;
+}
+.verdict.show { animation: thunk .45s cubic-bezier(.3,1.6,.5,1) forwards; }
+@keyframes thunk {
+  0%   { opacity: 0; transform: rotate(-9deg) scale(2.2); }
+  100% { opacity: .92; transform: rotate(-9deg) scale(1); }
+}
+
+/* ── Stage 3: envelope ────────────────────────────────────────────────── */
+.env-stage { width: 100%; display: flex; flex-direction: column; align-items: center; }
+.env-wrap {
+  width: min(360px, 100%);
+  margin-top: 120px;
+  perspective: 900px;
+  transition: transform .8s cubic-bezier(.22,1,.36,1), opacity .6s ease;
+}
+.envelope {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1.58 / 1;
+  filter: drop-shadow(0 18px 22px rgba(30,43,74,.28));
+}
+.env-back {
+  position: absolute; inset: 0;
+  background: #E3D9C5;
+  border-radius: 6px;
+}
+.env-letter {
+  position: absolute;
+  left: 6%; right: 6%; top: 6%; height: 88%;
+  background: var(--paper);
+  border-radius: 3px;
+  z-index: 2;
+  padding: 16px 18px;
+  transition: transform .9s cubic-bezier(.22,1,.36,1);
+  background-image: repeating-linear-gradient(var(--paper) 0 27px, #E9E2D3 27px 28px);
+  background-position: 0 44px;
+}
+.env-letter .salute { font-size: 1.4rem; margin: 0; }
+.env-front {
+  position: absolute; inset: 0;
+  z-index: 3;
+  background: #F4EEE2;
+  border-radius: 6px;
+  clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%);
+  overflow: hidden;
+}
+.env-front::after {
+  content: "";
+  position: absolute; left: 0; right: 0; bottom: 0; height: 8px;
+  background: var(--airmail);
+}
+.env-address {
+  position: absolute;
+  left: 10%; bottom: 18%;
+  font-family: var(--hand);
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: var(--ink);
+}
+.env-address span { display: block; font-family: var(--body); font-style: italic; font-size: .85rem; color: var(--ink-soft); margin-top: 4px; }
+.env-front .stamp { position: absolute; right: 7%; bottom: 18%; width: 52px; height: 62px; background: radial-gradient(circle, transparent 2.6px, #F4EEE2 3px) -5px -5px / 10px 10px; }
+.env-front .stamp .stamp-face { border-color: #F4EEE2; }
+.postmark {
+  position: absolute; right: 17%; bottom: 10%;
+  width: 72px; height: 72px;
+  color: rgba(30,43,74,.55);
+  transform: rotate(-14deg);
+  pointer-events: none;
+}
+.env-flap {
+  position: absolute;
+  left: 0; right: 0; top: 0;
+  height: 56%;
+  z-index: 4;
+  background: #EDE5D5;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: 50% 0;
+  transition: transform .6s cubic-bezier(.5,0,.3,1), z-index 0s .3s;
+  border-radius: 6px 6px 0 0;
+}
+.env-flap::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(30,43,74,.08));
+}
+.seal {
+  position: absolute;
+  left: 50%; top: 56%;
+  z-index: 6;
+  width: 74px; height: 74px;
+  transform: translate(-50%, -50%);
+  border: 0; padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 30%, var(--wax-hi), var(--wax) 55%, #5C1522 100%);
+  box-shadow:
+    0 0 0 5px rgba(123,30,46,.85),
+    0 0 0 6px rgba(92,21,34,.6),
+    0 6px 12px rgba(0,0,0,.3),
+    inset 0 -3px 6px rgba(0,0,0,.25);
+  display: grid; place-items: center;
+  transition: transform .35s cubic-bezier(.3,1.6,.5,1), opacity .35s ease;
+  animation: breathe 2.4s ease-in-out infinite;
+}
+.seal span {
+  font-family: var(--display);
+  font-size: 1.9rem;
+  color: rgba(255,230,230,.82);
+  text-shadow: 0 -1px 0 rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.15);
+  line-height: 1;
+}
+.seal:hover { transform: translate(-50%, -50%) scale(1.06); }
+@keyframes breathe {
+  0%,100% { box-shadow: 0 0 0 5px rgba(123,30,46,.85), 0 0 0 6px rgba(92,21,34,.6), 0 6px 12px rgba(0,0,0,.3), inset 0 -3px 6px rgba(0,0,0,.25); }
+  50%     { box-shadow: 0 0 0 5px rgba(123,30,46,.85), 0 0 0 14px rgba(123,30,46,.12), 0 6px 12px rgba(0,0,0,.3), inset 0 -3px 6px rgba(0,0,0,.25); }
+}
+.env-hint { margin-top: 26px; font-style: italic; color: var(--ink-soft); font-size: 1.05rem; transition: opacity .3s; }
+
+/* opening sequence */
+.env-stage.opening .seal { animation: none; transform: translate(-50%, -50%) scale(1.25); opacity: 0; pointer-events: none; }
+.env-stage.opening .env-flap { transform: rotateX(180deg); z-index: 1; transition-delay: .25s, .55s; }
+.env-stage.opening .env-letter { transform: translateY(-50%); transition-delay: .85s; }
+.env-stage.opening .env-hint { opacity: 0; }
+.env-stage.read .env-wrap { transform: translateY(60px) scale(.9); opacity: 0; }
+
+/* full letter */
+.letter {
+  display: none;
+  width: 100%;
+  background: var(--paper);
+  border-radius: 4px;
+  padding: 34px 28px 28px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 24px 50px -22px rgba(30,43,74,.5);
+  position: relative;
+}
+.letter.show { display: block; animation: unfold .8s cubic-bezier(.22,1,.36,1); }
+@keyframes unfold {
+  from { opacity: 0; transform: translateY(40px) scaleY(.92); }
+  to   { opacity: 1; transform: none; }
+}
+.letter-date { font-style: italic; color: var(--ink-soft); font-size: .95rem; text-align: right; margin: 0 0 18px; }
+.letter .salute { font-size: 1.9rem; margin: 0 0 14px; }
+.letter-body p {
+  font-size: 1.1rem;
+  line-height: 1.75;
+  margin: 0 0 1em;
+  text-wrap: pretty;
+}
+.letter-sign { margin: 26px 0 28px; }
+.letter-sign .close { font-style: italic; color: var(--ink-soft); margin: 0; }
+.letter-sign .name { font-family: var(--hand); font-size: 2.1rem; line-height: 1.2; margin: 4px 0 0; }
+
+/* ── Stage 4: gift ────────────────────────────────────────────────────── */
+.gift-head { text-align: center; margin: 4px 0 22px; }
+.gift-head h2 {
+  font-family: var(--display); font-weight: 400;
+  font-size: clamp(2rem, 8vw, 2.6rem); line-height: 1.05; margin: 0 0 10px;
+}
+.gift-head p { color: var(--ink-soft); font-size: 1.08rem; margin: 0 auto; max-width: 32ch; line-height: 1.55; }
+/* the mix: one paper sheet, like the letter, holding a tracklist */
+.mix {
+  position: relative;
+  width: 100%;
+  background: var(--paper);
+  border-radius: 6px;
+  padding: 30px 22px 10px;
+  box-shadow: 0 1px 0 rgba(0,0,0,.05), 0 24px 50px -22px rgba(30,43,74,.5);
+  overflow: hidden;
+}
+.mix::before {
+  content: ""; position: absolute; left: 0; right: 0; top: 0; height: 6px;
+  background: var(--airmail);
+}
+.mix-label {
+  display: flex; justify-content: space-between; align-items: flex-end; gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--ink);
+}
+.mix-label .salute { margin: 0; font-size: 1.7rem; }
+.mix-label .stamp { width: 52px; height: 62px; }
+.mix-meta { margin: 6px 0 0; font-style: italic; color: var(--ink-soft); font-size: .95rem; }
+
+.tracklist { list-style: none; margin: 0; padding: 0; }
+.track { padding: 18px 0 20px; border-bottom: 1px solid var(--rule); }
+.track:last-child { border-bottom: 0; }
+.track-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 12px; }
+.track-no {
+  font-family: var(--display); font-size: 1.35rem; color: var(--wax);
+  min-width: 1.6em; flex: none;
+}
+.track-title { flex: 1; min-width: 0; }
+.track-title h3 {
+  font-family: var(--display); font-weight: 400;
+  font-size: 1.35rem; line-height: 1.15; margin: 0;
+}
+.track-title p { margin: 3px 0 0; font-style: italic; color: var(--ink-soft); font-size: .98rem; line-height: 1.4; }
+.track-link {
+  flex: none;
+  color: var(--ink-soft); font-size: .9rem;
+  text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--rule);
+}
+.track-link:hover { color: var(--ink); text-decoration-color: var(--ink); }
+
+/* Spotify player sits in a paper mat so it reads as part of the sheet */
+.player {
+  position: relative;
+  border-radius: 14px;
+  padding: 5px;
+  background: var(--paper-2);
+  box-shadow: inset 0 0 0 1px var(--rule);
+}
+.player::before {
+  content: "Loading the player…";
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-style: italic; color: var(--ink-soft); font-size: .95rem;
+}
+.player iframe { position: relative; display: block; width: 100%; border: 0; border-radius: 10px; }
+.track.featured .track-no { color: var(--air-red); }
+.track.featured .track-title h3 { font-size: 1.6rem; }
+.gift-foot { margin-top: 10px; text-align: center; }
+
+/* ── Footer note ──────────────────────────────────────────────────────── */
+.sig { margin-top: 28px; font-size: .85rem; color: var(--ink-soft); font-style: italic; text-align: center; }
+
+/* ── Small screens ────────────────────────────────────────────────────── */
+@media (max-width: 420px) {
+  .deck { height: 400px; }
+  .postcard-inner { padding: 22px 18px 16px; }
+  .sheet { padding: 24px 18px 20px; }
+  .letter { padding: 28px 20px 22px; }
+  .env-address { font-size: 1.35rem; }
+  .postmark { width: 60px; height: 60px; }
+  .route li { font-size: .74rem; min-width: 50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
+}
+</style>
+</head>
+<body>
+
+<ol class="route" id="route" aria-label="Progress">
+  <li data-step="0"><span class="dot"></span>Hello</li>
+  <span class="leg" aria-hidden="true"></span>
+  <li data-step="1"><span class="dot"></span>Questions</li>
+  <span class="leg" aria-hidden="true"></span>
+  <li data-step="2"><span class="dot"></span>Letter</li>
+  <span class="leg" aria-hidden="true"></span>
+  <li data-step="3"><span class="dot"></span>Gift</li>
+</ol>
+
+<!-- ── Stage 1: Introduction ─────────────────────────────────────────── -->
+<section class="stage" id="stage-intro" aria-label="Introduction">
+  <div class="deck" id="deck"></div>
+</section>
+
+<!-- ── Stage 2: Questions ────────────────────────────────────────────── -->
+<section class="stage" id="stage-quiz" aria-label="Questions">
+  <div class="sheet" id="sheet">
+    <div class="q-meta">
+      <span id="qCount">Question 1 of 4</span>
+      <span class="ticks" id="ticks"></span>
+    </div>
+    <div id="qSteps"></div>
+    <div class="verdict" id="verdict" aria-hidden="true">Correct answer</div>
+  </div>
+</section>
+
+<!-- ── Stage 3: Envelope + letter ────────────────────────────────────── -->
+<section class="stage" id="stage-letter" aria-label="Letter">
+  <div class="env-stage" id="envStage">
+    <div class="env-wrap">
+      <div class="envelope">
+        <div class="env-back"></div>
+        <div class="env-letter"><p class="salute" data-fill="salutation"></p></div>
+        <div class="env-front">
+          <div class="env-address"><span data-fill="to-line-1"></span></div>
+          <svg class="postmark" viewBox="0 0 100 100" aria-hidden="true">
+            <defs><path id="pm" d="M50,50 m-34,0 a34,34 0 1,1 68,0 a34,34 0 1,1 -68,0"/></defs>
+            <circle cx="50" cy="50" r="44" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="50" cy="50" r="26" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <text font-size="10" font-family="Newsreader, serif" fill="currentColor" letter-spacing="1.5"><textPath href="#pm" id="pmText">KUALA LUMPUR</textPath></text>
+            <text x="50" y="54" text-anchor="middle" font-size="11" font-family="Newsreader, serif" fill="currentColor" id="pmYear">2026</text>
+          </svg>
+          <div class="stamp" style="--stamp-ink: var(--wax)"><div class="stamp-face"><b data-fill="initial"></b><small>Air mail</small></div></div>
+        </div>
+        <div class="env-flap"></div>
+        <button class="seal" id="seal" aria-label="Break the seal to open the letter"><span data-fill="from-initial"></span></button>
+      </div>
+    </div>
+
+    <article class="letter" id="letter" aria-live="polite">
+      <p class="letter-date" id="letterDate"></p>
+      <p class="salute" data-fill="salutation"></p>
+      <div class="letter-body" id="letterBody"></div>
+      <div class="letter-sign">
+        <p class="close" id="letterClose"></p>
+        <p class="name" data-fill="from"></p>
+      </div>
+      <button class="btn btn-wax btn-wide" id="claimBtn">Claim your gift</button>
+    </article>
+  </div>
+</section>
+
+<!-- ── Stage 4: Gift ─────────────────────────────────────────────────── -->
+<section class="stage" id="stage-gift" aria-label="Gift">
+  <div class="gift-head">
+    <h2 id="giftTitle"></h2>
+    <p id="giftLead"></p>
+  </div>
+  <div class="mix">
+    <div class="mix-label">
+      <div>
+        <p class="salute" id="mixTitle"></p>
+      </div>
+      <div class="stamp" style="--stamp-ink: var(--air-blue)"><div class="stamp-face"><b>♪</b><small id="mixYear"></small></div></div>
+    </div>
+    <ol class="tracklist" id="tracks"></ol>
+  </div>
+  <div class="gift-foot"><button class="link-btn" id="restartBtn">Start from the beginning</button></div>
+</section>
+
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   CONTENT — edit everything here. No need to touch the code below.
+   ════════════════════════════════════════════════════════════════════════ */
+const CONTENT = {
+  to:   'Joan',
+  from: 'Bryan',
+  place: 'KUALA LUMPUR',
+  year:  '2026',
+
+  // Stage 1 — intro postcards. Click "Next" to move through them.
+  intro: [
+    { stamp: 'J',  title: 'Hi Joan.',
+      body: 'As promised, here’s a small farewell gift. Hope you smile at least once throughout the process.' },
+    { stamp: '✉', title: 'Why a website?',
+      body: 'Websites last forever. Just don’t forget where you saved your links :)' },
+    { stamp: '?',  title: 'To receive the letter and gift.',
+      body: 'Answer the following questions correctly. There is only one right answer.' }
+  ],
+  introLastButton: 'Start the questions',
+
+  // Stage 2 — questions. Types: 'text', 'choice', 'scale'.
+  //   text:   any non-empty answer passes unless `answers` is given (case-insensitive).
+  //   choice: any option passes unless `correct` is given.
+  //           `pretend: true` stamps "Correct answer" on whatever she picks.
+  //   scale:  0–10 dropdown; only `correct` passes (10).
+  questions: [
+    { type: 'text',
+      q: 'What is 1 + 1?',
+      placeholder: 'Your answer…',
+      answers: ['2', 'two'],
+      wrong: ['Hmm, try again.', 'Not quite. Count on your fingers if you need to.', 'It really is that simple.'] },
+    { type: 'choice',
+      q: 'Who are you going to miss the most?',
+      help: 'Choose carefully.',
+      options: ['Team Setia', 'Antler', 'Origa', 'MHub'],
+      pretend: true },
+    { type: 'choice',
+      q: 'Who are you going to miss the most from Antler?',
+      options: ['Mongi', 'Suan', 'Lyna', 'Bryan'],
+      pretend: true },
+    { type: 'scale',
+      q: 'On a scale of 0 to 10, is Bryan the best person to work with?',
+      correct: 10,
+      wrong: [
+        'Please reselect your answer.',
+        'Have another think about it.',
+        'Your manager would like a word.',
+        'This is between you and your conscience.',
+        'There is only one way out of this question.',
+        'Still waiting.'
+      ] }
+  ],
+
+  // Stage 3 — the letter.
+  letterSalutation: 'Dear Joan,',
+  letter: [
+    'It’s kind of a bummer that you had to go as I really enjoyed working with you. You’re responsible, sharp and friendly. Doesn’t get any better than that. Honestly, my first few months working weren’t so smooth. Lots of things to pick up and expectations were high. But for some reason, I felt a little more at ease whenever you were around. Thanks for making work bearable :)',
+    'That said, you’re onto the next chapter. An intentional decision. A fresh start. Unfamiliar work, but I know you’re gonna kill it. It’s clear that you take pride in your work, and the quality shows.',
+    'I wish you all the best, and please reach out if you ever need anything. I will add it to my to-dos.'
+  ],
+  letterClose: 'With gratitude,',
+
+  // Stage 4 — gift. The first song (featured) gets the large player with album art.
+  giftTitle: 'Songs for Joan',
+  giftLead:  'I’ve handpicked some songs that I believe you’ll like. Added a small description for each.',
+  mixTitle: 'Joan’s farewell mix',
+  tracks: [
+    { title: 'Inspiration', note: 'Play this to feel inspired.',                  spotifyTrackId: '28EGa1V5vxlomSmf9gfdYe', featured: true },
+    { title: 'Comfort',     note: 'Play this if you’re feeling drained.',         spotifyTrackId: '4RihdwyUf7waUlwIWghgOD' },
+    { title: 'Relax',       note: 'Play this when you’re driving back from work.', spotifyTrackId: '1Jc3tGa11ITNgph0yewlqn' },
+    { title: 'Relax 2',     note: 'Play this to start your day.',                 spotifyTrackId: '5gB2IrxOCX2j9bMnHKP38i' },
+    { title: 'Nostalgic',   note: 'Play this when you’re feeling nostalgic.',     spotifyTrackId: '3E6iea9uEmB7gRru4lyP6h' },
+    { title: 'Lullaby',     note: 'Play this if you want to sleep.',              spotifyTrackId: '3CB5Sjh1COpbybWyOYljzQ' },
+    { title: 'Deep feels',  note: 'Play this if you’re feeling deep in thought.', spotifyTrackId: '2m4xD0yi8tEFlBuVCBfmSw' }
+  ],
+
+};
+
+/* ════════════════════════════════════════════════════════════════════════
+   APP
+   ════════════════════════════════════════════════════════════════════════ */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const STAGES = ['stage-intro', 'stage-quiz', 'stage-letter', 'stage-gift'];
+let stage = 0;
+
+function goStage(i) {
+  stage = i;
+  STAGES.forEach((id, n) => $('#' + id).classList.toggle('active', n === i));
+  $$('#route li').forEach((li, n) => {
+    li.classList.toggle('active', n === i);
+    li.classList.toggle('done', n < i);
+    if (n === i) li.setAttribute('aria-current', 'step'); else li.removeAttribute('aria-current');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* fill simple text slots */
+function fillSlots() {
+  const map = {
+    'salutation':   CONTENT.letterSalutation,
+    'from':         CONTENT.from,
+    'initial':      CONTENT.to.charAt(0),
+    'from-initial': CONTENT.from.charAt(0)
+  };
+  $$('[data-fill]').forEach(el => {
+    const k = el.dataset.fill;
+    if (k === 'to-line-1') {
+      el.parentElement.insertBefore(document.createTextNode('To ' + CONTENT.to), el);
+      el.textContent = 'from ' + CONTENT.from;
+    } else if (k in map) el.textContent = map[k];
+  });
+  $('#pmText').textContent = CONTENT.place;
+  $('#pmYear').textContent = CONTENT.year;
+}
+
+/* ── Stage 1 ── */
+function buildDeck() {
+  const deck = $('#deck');
+  const n = CONTENT.intro.length;
+  const inks = ['var(--air-blue)', 'var(--wax)', 'var(--ok)', 'var(--air-red)'];
+  deck.innerHTML = CONTENT.intro.map((c, i) => `
+    <article class="postcard" data-pos="${Math.min(i, 3)}" aria-hidden="${i ? 'true' : 'false'}">
+      <div class="postcard-inner">
+        <div class="postcard-top">
+          <p class="salute">To ${esc(CONTENT.to)},</p>
+          <div class="stamp" style="--stamp-ink:${inks[i % inks.length]}"><div class="stamp-face"><b>${esc(c.stamp)}</b><small>${esc(CONTENT.year)}</small></div></div>
+        </div>
+        <h2>${esc(c.title)}</h2>
+        <p>${esc(c.body)}</p>
+        <div class="postcard-foot">
+          <span class="count">${i + 1} of ${n}</span>
+          <button class="btn ${i === n - 1 ? 'btn-wax' : ''}" data-next>${i === n - 1 ? esc(CONTENT.introLastButton) : 'Next'}</button>
+        </div>
+      </div>
+    </article>`).join('');
+
+  let top = 0;
+  const cards = $$('.postcard', deck);
+  deck.addEventListener('click', e => {
+    if (!e.target.closest('[data-next]')) return;
+    if (top === n - 1) { goStage(1); focusQuestion(); return; }
+    cards[top].classList.add('gone');
+    cards[top].setAttribute('aria-hidden', 'true');
+    top++;
+    cards.forEach((c, i) => { if (i >= top) c.dataset.pos = Math.min(i - top, 3); });
+    cards[top].setAttribute('aria-hidden', 'false');
+    setTimeout(() => $('[data-next]', cards[top]).focus({ preventScroll: true }), 350);
+  });
+}
+
+/* ── Stage 2 ── */
+let qIndex = 0;
+const wrongCount = {};
+
+function buildQuiz() {
+  const qs = CONTENT.questions;
+  $('#ticks').innerHTML = qs.map(() => '<i></i>').join('');
+  $('#qSteps').innerHTML = qs.map((q, i) => {
+    let input = '';
+    if (q.type === 'text') {
+      input = `<input class="field" id="in${i}" type="text" autocomplete="off" placeholder="${esc(q.placeholder || 'Your answer…')}" aria-label="Your answer">`;
+    } else if (q.type === 'choice') {
+      input = `<div class="choices" role="radiogroup" id="in${i}">${q.options.map(o =>
+        `<button type="button" class="choice" role="radio" aria-checked="false" data-val="${esc(o)}"><span class="mark"></span>${esc(o)}</button>`).join('')}</div>`;
+    } else if (q.type === 'scale') {
+      const opts = Array.from({ length: 11 }, (_, n) => `<option value="${n}">${n}</option>`).join('');
+      input = `<div class="scale-wrap"><select class="scale-select" id="in${i}" aria-label="Choose a number from 0 to 10">
+                 <option value="" selected disabled>Choose…</option>${opts}</select></div>
+               ${q.lowLabel || q.highLabel ? `<div class="scale-ends"><span>${esc(q.lowLabel || '')}</span><span>${esc(q.highLabel || '')}</span></div>` : ''}`;
+    }
+    return `<div class="q-step" data-i="${i}">
+      <h2>${esc(q.q)}</h2>
+      ${q.help ? `<p class="q-help">${esc(q.help)}</p>` : ''}
+      ${input}
+      <p class="q-error" id="err${i}" role="alert"></p>
+      <div class="q-actions"><button class="btn" data-submit="${i}">${i === qs.length - 1 ? 'Submit answer' : 'Next question'}</button></div>
+    </div>`;
+  }).join('');
+
+  // choice selection
+  $$('.choices').forEach(group => group.addEventListener('click', e => {
+    const b = e.target.closest('.choice'); if (!b) return;
+    $$('.choice', group).forEach(c => c.setAttribute('aria-checked', String(c === b)));
+    group.dataset.value = b.dataset.val;
+  }));
+
+  // submit buttons + Enter key
+  $('#qSteps').addEventListener('click', e => {
+    const b = e.target.closest('[data-submit]'); if (b) check(+b.dataset.submit);
+  });
+  $('#qSteps').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && e.target.classList.contains('field')) check(qIndex);
+  });
+
+  showQuestion(0);
+}
+
+function showQuestion(i) {
+  qIndex = i;
+  $$('.q-step').forEach(s => s.classList.toggle('active', +s.dataset.i === i));
+  $('#qCount').textContent = `Question ${i + 1} of ${CONTENT.questions.length}`;
+  $$('#ticks i').forEach((t, n) => t.classList.toggle('on', n <= i));
+}
+function focusQuestion() {
+  setTimeout(() => { const el = $(`#in${qIndex}`); if (el && el.focus) el.focus({ preventScroll: true }); }, 450);
+}
+
+function fail(i, main, sub) {
+  const err = $('#err' + i);
+  err.innerHTML = esc(main) + (sub ? `<small>${esc(sub)}</small>` : '');
+  const target = $('#in' + i).closest('.scale-wrap') || $('#in' + i);
+  target.classList.remove('shake'); void target.offsetWidth; target.classList.add('shake');
+}
+
+function stamp() {
+  const v = $('#verdict'); v.classList.remove('show'); void v.offsetWidth; v.classList.add('show');
+}
+function unstamp() { $('#verdict').classList.remove('show'); }
+
+function check(i) {
+  const q = CONTENT.questions[i];
+  const el = $('#in' + i);
+  let ok = false;
+
+  if (q.type === 'text') {
+    const v = el.value.trim();
+    if (!v) return fail(i, 'Type an answer to continue.');
+    ok = !q.answers || q.answers.map(a => a.toLowerCase()).includes(v.toLowerCase());
+    if (!ok) { wrongCount[i] = (wrongCount[i] || 0) + 1; return fail(i, (q.wrong || ['Try again.'])[(wrongCount[i] - 1) % (q.wrong || [1]).length]); }
+  }
+
+  if (q.type === 'choice') {
+    const v = el.dataset.value;
+    if (!v) return fail(i, 'Choose an option to continue.');
+    ok = !q.correct || v === q.correct;
+    if (!ok) {
+      wrongCount[i] = (wrongCount[i] || 0) + 1;
+      const msgs = q.wrong || ['Try again.'];
+      $$('.choice', el).forEach(c => c.setAttribute('aria-checked', 'false'));
+      delete el.dataset.value;
+      return fail(i, msgs[(wrongCount[i] - 1) % msgs.length]);
+    }
+    if (q.pretend) {
+      $('#err' + i).textContent = '';
+      const btn = $(`[data-submit="${i}"]`); btn.disabled = true;
+      stamp();
+      setTimeout(() => { btn.disabled = false; unstamp(); showQuestion(i + 1); }, 1100);
+      return;
+    }
+  }
+
+  if (q.type === 'scale') {
+    if (el.value === '') return fail(i, 'Choose a number to continue.');
+    const v = Number(el.value);
+    if (v !== q.correct) {
+      wrongCount[i] = (wrongCount[i] || 0) + 1;
+      const msgs = q.wrong || ['Please reselect your answer.'];
+      el.value = '';                          // force a reselect
+      return fail(i, `Incorrect answer. You chose ${v}.`, msgs[(wrongCount[i] - 1) % msgs.length]);
+    }
+    // correct: stamp it, then move on
+    $('#err' + i).textContent = '';
+    $$('button[data-submit]').forEach(b => b.disabled = true);
+    el.disabled = true;
+    stamp();
+    setTimeout(() => { goStage(2); setTimeout(() => $('#seal').focus({ preventScroll: true }), 650); }, 1500);
+    return;
+  }
+
+  $('#err' + i).textContent = '';
+  if (i < CONTENT.questions.length - 1) { showQuestion(i + 1); focusQuestion(); }
+}
+
+/* ── Stage 3 ── */
+function buildLetter() {
+  $('#letterBody').innerHTML = CONTENT.letter.map(p => `<p>${esc(p)}</p>`).join('');
+  $('#letterClose').textContent = CONTENT.letterClose;
+  $('#letterDate').textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  $('#seal').addEventListener('click', () => {
+    const st = $('#envStage');
+    if (st.classList.contains('opening')) return;
+    st.classList.add('opening');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setTimeout(() => {
+      st.classList.add('read');
+      setTimeout(() => {
+        $('.env-wrap').style.display = 'none';
+        $('#letter').classList.add('show');
+        $('#letter').scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }, reduce ? 0 : 550);
+    }, reduce ? 0 : 1900);
+  });
+  $('#claimBtn').addEventListener('click', () => goStage(3));
+}
+
+/* ── Stage 4 ── */
+function buildGift() {
+  $('#giftTitle').textContent = CONTENT.giftTitle;
+  $('#giftLead').textContent  = CONTENT.giftLead;
+  $('#mixTitle').textContent = CONTENT.mixTitle;
+  $('#mixYear').textContent  = CONTENT.year;
+  $('#tracks').innerHTML = CONTENT.tracks.map((t, i) => {
+    const id = encodeURIComponent(t.spotifyTrackId);
+    return `
+    <li class="track${t.featured ? ' featured' : ''}">
+      <div class="track-head">
+        <span class="track-no">${String(i + 1).padStart(2, '0')}</span>
+        <div class="track-title">
+          <h3>${esc(t.title || 'Song ' + (i + 1))}</h3>
+          ${t.note ? `<p>${esc(t.note)}</p>` : ''}
+        </div>
+        <a class="track-link" href="https://open.spotify.com/track/${id}" target="_blank" rel="noopener">Open in Spotify</a>
+      </div>
+      <div class="player">
+        <iframe title="Spotify player: ${esc(t.title || '')}" src="https://open.spotify.com/embed/track/${id}?utm_source=generator"
+          height="${t.featured ? 152 : 80}" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+      </div>
+    </li>`;
+  }).join('');
+  $('#restartBtn').addEventListener('click', () => location.reload());
+}
+
+fillSlots();
+buildDeck();
+buildQuiz();
+buildLetter();
+buildGift();
+goStage(0);
+</script>
+</body>
+</html>
