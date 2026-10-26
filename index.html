@@ -616,7 +616,7 @@ button { font: inherit; color: inherit; }
 <body>
 
 <ol class="route" id="route" aria-label="Progress">
-  <li data-step="0"><span class="dot"></span>Hello</li>
+  <li data-step="0"><span class="dot"></span>Introduction</li>
   <span class="leg" aria-hidden="true"></span>
   <li data-step="1"><span class="dot"></span>Questions</li>
   <span class="leg" aria-hidden="true"></span>
@@ -693,7 +693,6 @@ button { font: inherit; color: inherit; }
     </div>
     <ol class="tracklist" id="tracks"></ol>
   </div>
-  <div class="gift-foot"><button class="link-btn" id="restartBtn">Start from the beginning</button></div>
 </section>
 
 
@@ -754,15 +753,15 @@ const CONTENT = {
   // Stage 3 — the letter.
   letterSalutation: 'Dear Joan,',
   letter: [
-    'It’s kind of a bummer that you had to go as I really enjoyed working with you. You’re responsible, sharp and friendly. Doesn’t get any better than that. Honestly, my first few months working weren’t so smooth. Lots of things to pick up and expectations were high. But for some reason, I felt a little more at ease whenever you were around. Thanks for making work bearable :)',
+    'It’s kind of a bummer that you had to go as I really enjoyed working with you. You’re responsible, sharp and friendly. Doesn’t get any better than that. Honestly, my first few months working here wasn’t so smooth. Lots of things to pick up and expectations were high. But for some reason, I always felt at ease whenever you were around. Thanks for making work bearable :)',
     'That said, you’re onto the next chapter. An intentional decision. A fresh start. Unfamiliar work, but I know you’re gonna kill it. It’s clear that you take pride in your work, and the quality shows.',
     'I wish you all the best, and please reach out if you ever need anything. I will add it to my to-dos.'
   ],
-  letterClose: 'With gratitude,',
+  letterClose: 'Regards,',
 
   // Stage 4 — gift. The first song (featured) gets the large player with album art.
   giftTitle: 'Songs for Joan',
-  giftLead:  'I’ve handpicked some songs that I believe you’ll like. Added a small description for each.',
+  giftLead:  'I’ve handpicked some songs that I hope you’ll like. Added a small description for each.',
   mixTitle: 'Joan’s farewell mix',
   tracks: [
     { title: 'Inspiration', note: 'Play this to feel inspired.',                  spotifyTrackId: '28EGa1V5vxlomSmf9gfdYe', featured: true },
@@ -1013,7 +1012,6 @@ function buildGift() {
           <h3>${esc(t.title || 'Song ' + (i + 1))}</h3>
           ${t.note ? `<p>${esc(t.note)}</p>` : ''}
         </div>
-        <a class="track-link" href="https://open.spotify.com/track/${id}" target="_blank" rel="noopener">Open in Spotify</a>
       </div>
       <div class="player">
         <iframe title="Spotify player: ${esc(t.title || '')}" src="https://open.spotify.com/embed/track/${id}?utm_source=generator"
@@ -1021,7 +1019,6 @@ function buildGift() {
       </div>
     </li>`;
   }).join('');
-  $('#restartBtn').addEventListener('click', () => location.reload());
 }
 
 fillSlots();
